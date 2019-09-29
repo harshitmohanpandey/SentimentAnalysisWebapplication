@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cloud Computing Assignment</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+  <body>
+        <nav class="navbar navbar-default navbar-static-top">      
+                <ul class="nav navbar-nav pull-right">
+                  <li ><a class="navbar-brand"><b>HARSHIT MOHAN PANDEY(2014HW70199)&nbsp;<i class="fa fa fa-user"></i></b></a></li>
+                  <li ><a class="navbar-brand"><b>Dessertation&nbsp;<i class="fa fa fa-book"></i></b></a></li>                  
+                </ul>   
+        </nav> 
+        <div class="container">
+                <div class="jumbotron">
+                        <h2 style="margin-top:-5px"><b><center>Sentiment Analysis For Restaurant Reviews</center></b></h2>
+                        <p>Sentiment Analysis is the process of determining whether a piece of writing is positive, 
+                            negative , neutral etc. It’s also known as opinion mining, deriving the opinion or 
+                            attitude of a speaker.here I am doing analysis for restaurant reviews and I have included two classes Positive 
+                            sentiment and negative sentiment. </p>
+                            <form  method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                    <label>Review:</label>
+                                    <textarea id="txt_review" placeholder="write here..." class="form-control" rows="5" id="comment"></textarea><br>
+                                    <button  type="button" id="chksentiment" class="btn btn-default" data-dismiss="modal">Check</button>&nbsp;&nbsp;
+                                    <b><span id="senans"></span></b>
+                            </div>
+                            </form>
+                </div>
+                <div class="jumbotron">
+                    <form  method="post">
+                      {% csrf_token %}                    
+                    <h2 style="margin-top:-5px"><b><center>Live Review analysis for https://www.tripadvisor.in</center></b></h2>
+                    <h2 style="margin-top:-5px"><b><center>Restaurant : {{restaurantname}}</center></b></h2>
+                    <label>URL:</label>
+                      <div class="input-group">
+                          <input type="text" class="form-control" name="url">
+                          <span class="input-group-btn">
+                               <button class="btn btn-default" type="submit">Go!</button>
+                          </span>
+                       </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>Review</th>
+                            <th>Sentiment</th>                           
+                          </tr>
+                        </thead>
+                        <tbody>  
+                            {% for item in reviews %}                        
+                            <tr>
+                            <td>{{item.review}}</td>
+                            <td>{{item.sentiment}}</td>  
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </form>
+                  </div>
+        </div>
+  </body>
+</html>
+
+<script>
+
+  $("#chksentiment").click(function(){
+    var review = $("#txt_review").val();
+    $.ajax({
+      url: '/ajax/chk_sentiment/',
+      data: {
+        'review': review
+      },
+      dataType: 'json',
+      success: function (data) {
+        $("#senans").html(data.sentiment)
+      }
+    });
+  });
+</script>
